@@ -57,7 +57,8 @@
 }
 
 .brand-subtitle {
-	font-size: 0.75rem;
+	font-family: 'EB Garamond', serif;
+	font-size: 1rem;
 	color: var(--muted);
 	padding-top: 0.2rem;
 }
