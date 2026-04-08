@@ -1,14 +1,86 @@
 import { cards } from '../data/cards.js';
+import { UI_TEXT } from './i18n/uiText.js';
 
-const suitLabel = {major:'Major Arcana', wands:'Wands', cups:'Cups', swords:'Swords', pents:'Pentacles'};
 const suitClass = {major:'suit-major', wands:'suit-wands', cups:'suit-cups', swords:'suit-swords', pents:'suit-pents'};
+const suitOrder = ['major', 'wands', 'cups', 'swords', 'pents'];
+const suitCount = cards.reduce((acc, card) => {
+  acc[card.suit] = (acc[card.suit] || 0) + 1;
+  return acc;
+}, {});
+const LANGUAGE_STORAGE_KEY = 'tarot-lang';
 
 let activeFilter = 'all';
 let searchVal = '';
+let currentLang = 'vi';
+
+function getUi() {
+  return UI_TEXT[currentLang] || UI_TEXT.vi;
+}
+
+function getNormalizedLanguage(lang) {
+  return lang === 'en' ? 'en' : 'vi';
+}
+
+function updateTabLabels() {
+  const ui = getUi();
+  document.querySelectorAll('.tab').forEach((tab) => {
+    const suit = tab.dataset.suit;
+    const baseLabel = ui.tabs[suit];
+    if (!baseLabel) return;
+
+    const count = suit === 'all' ? cards.length : (suitCount[suit] || 0);
+    const prefix = suit === 'all' ? '' : '✦ ';
+    tab.textContent = `${prefix}${baseLabel} (${count})`;
+  });
+}
+
+function applyLanguageToUi() {
+  const ui = getUi();
+  const searchInput = document.getElementById('search');
+  const heroTitle = document.querySelector('.hero h1');
+  const heroSubtitle = document.querySelector('.hero .subtitle');
+  const desktopLangLabel = document.querySelector('.header-actions .lang-wrap > span');
+  const mobileLangLabel = document.querySelector('.mobile-lang > span');
+  const menuToggle = document.getElementById('menuToggle');
+  const brandHome = document.getElementById('brandHome');
+  const backToTop = document.getElementById('backToTop');
+  const footerParagraphs = document.querySelectorAll('.site-footer p');
+
+  document.documentElement.lang = currentLang;
+  document.title = ui.documentTitle;
+
+  if (searchInput) searchInput.placeholder = ui.searchPlaceholder;
+  if (heroTitle) heroTitle.textContent = ui.heroTitle;
+  if (heroSubtitle) heroSubtitle.textContent = ui.heroSubtitle;
+  if (desktopLangLabel) desktopLangLabel.textContent = ui.languageLabel;
+  if (mobileLangLabel) mobileLangLabel.textContent = ui.mobileLanguageLabel;
+  if (menuToggle) menuToggle.setAttribute('aria-label', ui.menuAriaLabel);
+  if (brandHome) brandHome.setAttribute('aria-label', ui.brandAriaLabel);
+  if (backToTop) backToTop.setAttribute('aria-label', ui.backToTopAriaLabel);
+
+  if (footerParagraphs[0]) footerParagraphs[0].textContent = ui.footerIntro;
+  if (footerParagraphs[1]) footerParagraphs[1].textContent = ui.footerContact;
+
+  document.querySelectorAll('.lang-select-input').forEach((select) => {
+    select.value = currentLang;
+  });
+
+  updateTabLabels();
+}
+
+function setLanguage(lang, shouldRender = true) {
+  currentLang = getNormalizedLanguage(lang);
+  localStorage.setItem(LANGUAGE_STORAGE_KEY, currentLang);
+  applyLanguageToUi();
+  if (shouldRender) {
+    render();
+  }
+}
 
 function render() {
+  const ui = getUi();
   const grid = document.getElementById('grid');
-  const suits = activeFilter === 'all' ? ['major','wands','cups','swords','pents'] : [activeFilter];
+  const suits = activeFilter === 'all' ? suitOrder : [activeFilter];
   let html = '';
   let total = 0;
 
@@ -22,8 +94,7 @@ function render() {
     if (!filtered.length) return;
 
     if (activeFilter === 'all') {
-      const labels = {major:'✦ Major Arcana — 22 Bài Lớn',wands:'✦ Wands — Bộ Gậy',cups:'✦ Cups — Bộ Ly',swords:'✦ Swords — Bộ Kiếm',pents:'✦ Pentacles — Bộ Tiền'};
-      html += `<div class="section-divider">${labels[suit]}</div>`;
+      html += `<div class="section-divider">${ui.sectionLabels[suit]}</div>`;
     }
 
     filtered.forEach(c => {
@@ -36,30 +107,30 @@ function render() {
             <div class="card-header">
               <span class="card-num">${c.num}</span>
               <span class="card-name">${c.name}</span>
-              <span class="suit-label ${suitClass[c.suit]}">${suitLabel[c.suit]}</span>
+              <span class="suit-label ${suitClass[c.suit]}">${ui.suitLabel[c.suit]}</span>
             </div>
             <div class="card-vi">${c.vi}</div>
             <div class="card-meaning">${c.meaning}</div>
             <div class="keywords">${kwHtml}</div>
-            <span class="flip-hint">↩ nhấn để lật</span>
+            <span class="flip-hint">${ui.flipHintFront}</span>
           </div>
           <div class="card-back">
             <div class="card-header">
               <span class="card-num" style="transform:rotate(180deg);display:inline-block">⟳</span>
-              <span class="card-name">${c.name} — Ngược</span>
+              <span class="card-name">${c.name}${ui.reversedSuffix}</span>
             </div>
-            <div class="card-vi" style="padding-left:2.4rem"><span class="rev-badge">REVERSED</span></div>
+            <div class="card-vi" style="padding-left:2.4rem"><span class="rev-badge">${ui.reversedBadge}</span></div>
             <div class="card-rev-meaning">${c.rev}</div>
             <div class="keywords">${revkwHtml}</div>
-            <span class="flip-hint">↩ nhấn để quay lại</span>
+            <span class="flip-hint">${ui.flipHintBack}</span>
           </div>
         </div>
       </div>`;
     });
   });
 
-  grid.innerHTML = html || '<div class="empty-state">Không tìm thấy lá phù hợp.</div>';
-  document.getElementById('count').textContent = total + ' lá';
+  grid.innerHTML = html || `<div class="empty-state">${ui.emptyState}</div>`;
+  document.getElementById('count').textContent = ui.countText(total);
 }
 
 function filter(suit) {
@@ -106,10 +177,7 @@ function goHome() {
 }
 
 function syncLanguageSelectors(changedSelect) {
-  const value = changedSelect.value;
-  document.querySelectorAll('.lang-select-input').forEach((select) => {
-    select.value = value;
-  });
+  setLanguage(changedSelect.value);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -160,6 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const shouldShow = window.scrollY > 250;
     backToTop.classList.toggle('visible', shouldShow);
   });
+
+  const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  const initialLanguage = savedLanguage || languageSelects[0]?.value || 'vi';
+  setLanguage(initialLanguage, false);
 
   render();
 });
