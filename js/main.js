@@ -343,10 +343,47 @@ document.addEventListener('DOMContentLoaded', () => {
     search(event.target.value);
   });
 
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let suppressMenuToggleUntil = 0;
+
+  document.addEventListener('touchstart', (event) => {
+    const touch = event.touches?.[0];
+    if (!touch) return;
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (event) => {
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    const deltaX = Math.abs(touch.clientX - touchStartX);
+    const deltaY = Math.abs(touch.clientY - touchStartY);
+
+    // Ignore synthetic click after swipe so mobile menu only opens by tap.
+    if (deltaX > 14 || deltaY > 14) {
+      suppressMenuToggleUntil = Date.now() + 250;
+    }
+  }, { passive: true });
+
   menuToggle?.addEventListener('click', () => {
+    if (Date.now() < suppressMenuToggleUntil) return;
+
     mobilePanel?.classList.toggle('open');
     document.querySelector('.site-header')?.classList.remove('header-hidden');
   });
+
+  document.addEventListener('touchstart', (event) => {
+    if (!mobilePanel?.classList.contains('open')) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const touchedOutsideMenu = !mobilePanel.contains(target) && !menuToggle?.contains(target);
+    if (touchedOutsideMenu) {
+      mobilePanel.classList.remove('open');
+    }
+  }, { passive: true });
 
   languageSelects.forEach((select) => {
     select.addEventListener('change', () => {
