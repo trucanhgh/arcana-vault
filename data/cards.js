@@ -1,4 +1,6 @@
-export const cards = [
+import { cards as cardsEn } from './cards_en.js';
+
+const cardsVi = [
 	// MAJOR ARCANA
 	{num:'0', name:'The Fool', vi:'Kẻ Khờ', suit:'major',
 		kw:['khởi đầu','ngây thơ','phiêu lưu','tự do','tiềm năng vô hạn','bước nhảy tin tưởng'],
@@ -399,3 +401,47 @@ export const cards = [
 		revkw:['tham lam','vật chất thái quá','tham nhũng','không đáng tin','lãng phí'],
 		rev:'Tham lam, đặt vật chất lên trên tất cả. Tham nhũng, không đáng tin trong kinh doanh. Lãng phí tài sản do không biết quản lý.'},
 ];
+
+if (cardsVi.length !== cardsEn.length) {
+	throw new Error(`Card data length mismatch: vi=${cardsVi.length}, en=${cardsEn.length}`);
+}
+
+export const cards = cardsVi.map((viCard, index) => {
+	const enCard = cardsEn[index];
+
+	if (!enCard || viCard.num !== enCard.num || viCard.suit !== enCard.suit) {
+		throw new Error(`Card index mismatch at ${index}: vi(${viCard.num}, ${viCard.suit}) vs en(${enCard?.num}, ${enCard?.suit})`);
+	}
+
+	const viName = viCard.name || enCard.vi || viCard.name || '';
+	const enName = enCard.name || viCard.name || viName;
+
+	return {
+		num: viCard.num,
+		suit: viCard.suit,
+		name: {
+			vi: viName,
+			en: enName,
+		},
+		label: {
+			vi: viCard.vi || viName,
+			en: enCard.name || viCard.name || enName,
+		},
+		kw: {
+			vi: Array.isArray(viCard.kw) ? viCard.kw : [],
+			en: Array.isArray(enCard.kw) ? enCard.kw : [],
+		},
+		meaning: {
+			vi: viCard.meaning || '',
+			en: enCard.meaning || '',
+		},
+		revkw: {
+			vi: Array.isArray(viCard.revkw) ? viCard.revkw : [],
+			en: Array.isArray(enCard.revkw) ? enCard.revkw : [],
+		},
+		rev: {
+			vi: viCard.rev || '',
+			en: enCard.rev || '',
+		},
+	};
+});

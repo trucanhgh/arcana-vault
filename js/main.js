@@ -13,6 +13,27 @@ let activeFilter = 'all';
 let searchVal = '';
 let currentLang = 'vi';
 
+function getLocalizedCardText(card, key, lang = currentLang) {
+  const value = card?.[key];
+
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    return value[lang] || value.vi || value.en || '';
+  }
+
+  return typeof value === 'string' ? value : '';
+}
+
+function getLocalizedCardList(card, key, lang = currentLang) {
+  const value = card?.[key];
+
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    const localized = value[lang] || value.vi || value.en;
+    return Array.isArray(localized) ? localized : [];
+  }
+
+  return Array.isArray(value) ? value : [];
+}
+
 function getUi() {
   return UI_TEXT[currentLang] || UI_TEXT.vi;
 }
@@ -88,8 +109,21 @@ function render() {
     const filtered = cards.filter(c => {
       if (c.suit !== suit) return false;
       if (!searchVal) return true;
+
+      const localizedName = getLocalizedCardText(c, 'name');
+      const localizedLabel = getLocalizedCardText(c, 'label');
+      const localizedMeaning = getLocalizedCardText(c, 'meaning');
+      const localizedRev = getLocalizedCardText(c, 'rev');
+      const localizedKw = getLocalizedCardList(c, 'kw').join(' ');
+      const localizedRevKw = getLocalizedCardList(c, 'revkw').join(' ');
       const q = searchVal.toLowerCase();
-      return c.name.toLowerCase().includes(q) || c.vi.toLowerCase().includes(q) || c.meaning.toLowerCase().includes(q) || c.rev.toLowerCase().includes(q) || c.kw.join(' ').toLowerCase().includes(q);
+
+      return localizedName.toLowerCase().includes(q)
+        || localizedLabel.toLowerCase().includes(q)
+        || localizedMeaning.toLowerCase().includes(q)
+        || localizedRev.toLowerCase().includes(q)
+        || localizedKw.toLowerCase().includes(q)
+        || localizedRevKw.toLowerCase().includes(q);
     });
     if (!filtered.length) return;
 
@@ -99,28 +133,35 @@ function render() {
 
     filtered.forEach(c => {
       total++;
-      const kwHtml = c.kw.map(k=>`<span class="kw">${k}</span>`).join('');
-      const revkwHtml = c.revkw.map(k=>`<span class="kw kw-rev">${k}</span>`).join('');
+      const localizedName = getLocalizedCardText(c, 'name');
+      const localizedLabel = getLocalizedCardText(c, 'label');
+      const localizedMeaning = getLocalizedCardText(c, 'meaning');
+      const localizedRev = getLocalizedCardText(c, 'rev');
+      const localizedKw = getLocalizedCardList(c, 'kw');
+      const localizedRevKw = getLocalizedCardList(c, 'revkw');
+
+      const kwHtml = localizedKw.map(k=>`<span class="kw">${k}</span>`).join('');
+      const revkwHtml = localizedRevKw.map(k=>`<span class="kw kw-rev">${k}</span>`).join('');
       html += `<div class="card" onclick="this.classList.toggle('flipped')" data-suit="${c.suit}">
         <div class="card-inner">
           <div class="card-front">
             <div class="card-header">
               <span class="card-num">${c.num}</span>
-              <span class="card-name">${c.name}</span>
+              <span class="card-name">${localizedName}</span>
               <span class="suit-label ${suitClass[c.suit]}">${ui.suitLabel[c.suit]}</span>
             </div>
-            <div class="card-vi">${c.vi}</div>
-            <div class="card-meaning">${c.meaning}</div>
+            <div class="card-vi">${localizedLabel}</div>
+            <div class="card-meaning">${localizedMeaning}</div>
             <div class="keywords">${kwHtml}</div>
             <span class="flip-hint">${ui.flipHintFront}</span>
           </div>
           <div class="card-back">
             <div class="card-header">
               <span class="card-num" style="transform:rotate(180deg);display:inline-block">⟳</span>
-              <span class="card-name">${c.name}${ui.reversedSuffix}</span>
+              <span class="card-name">${localizedName}${ui.reversedSuffix}</span>
             </div>
             <div class="card-vi" style="padding-left:2.4rem"><span class="rev-badge">${ui.reversedBadge}</span></div>
-            <div class="card-rev-meaning">${c.rev}</div>
+            <div class="card-rev-meaning">${localizedRev}</div>
             <div class="keywords">${revkwHtml}</div>
             <span class="flip-hint">${ui.flipHintBack}</span>
           </div>
