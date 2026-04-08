@@ -9,12 +9,57 @@
 </head>
 <body>
 
-<header>
-  <h1>78 Lá Tarot</h1>
-  <p class="subtitle">Ý nghĩa & lý giải ngắn từng lá</p>
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <button class="brand-home" id="brandHome" type="button" aria-label="Về đầu trang">
+      <span class="brand-icon">✦</span>
+      <span class="brand-copy">
+        <span class="brand-title">Tarot</span>
+        <span class="brand-subtitle">by bibiebi</span>
+      </span>
+    </button>
+
+    <div class="search-wrap header-search">
+      <input type="text" id="search" placeholder="Tìm lá tarot...">
+    </div>
+
+    <div class="header-actions">
+      <label class="lang-wrap" for="langDesktop">
+        <span>Lang</span>
+        <select id="langDesktop" class="lang-select-input">
+          <option value="vi" selected>VI</option>
+          <option value="en">ENG</option>
+        </select>
+      </label>
+      <button id="menuToggle" class="menu-toggle" type="button" aria-label="Mở menu">☰</button>
+    </div>
+  </div>
+
+  <div id="mobilePanel" class="mobile-panel">
+    <div class="tabs mobile-tabs">
+      <button class="tab active" data-suit="all">Tất cả (78)</button>
+      <button class="tab" data-suit="major">✦ Major Arcana (22)</button>
+      <button class="tab" data-suit="wands">✦ Wands (14)</button>
+      <button class="tab" data-suit="cups">✦ Cups (14)</button>
+      <button class="tab" data-suit="swords">✦ Swords (14)</button>
+      <button class="tab" data-suit="pents">✦ Pentacles (14)</button>
+    </div>
+    <label class="lang-wrap mobile-lang" for="langMobile">
+      <span>Ngôn ngữ</span>
+      <select id="langMobile" class="lang-select-input">
+        <option value="vi" selected>VI</option>
+        <option value="en">ENG</option>
+      </select>
+    </label>
+  </div>
 </header>
 
-<div class="tabs">
+<section class="hero">
+  <h1>78 Lá Tarot</h1>
+  <p class="subtitle">Ý nghĩa & lý giải ngắn từng lá</p>
+</section>
+
+<div class="tabs desktop-tabs">
   <button class="tab active" data-suit="all">Tất cả (78)</button>
   <button class="tab" data-suit="major">✦ Major Arcana (22)</button>
   <button class="tab" data-suit="wands">✦ Wands (14)</button>
@@ -23,13 +68,20 @@
   <button class="tab" data-suit="pents">✦ Pentacles (14)</button>
 </div>
 
-<div class="search-wrap">
-  <input type="text" id="search" placeholder="Tìm lá tarot...">
-</div>
-
 <div class="count" id="count">78 lá</div>
 
 <div class="grid" id="grid"></div>
+
+<footer class="site-footer">
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Tarot by bibiebi là không gian chia sẻ ý nghĩa các lá bài theo cách ngắn gọn, dễ tra cứu.
+  </p>
+  <p>
+    Contact: bibiebi@example.com · Instagram: @bibiebi · Hotline: 0900 000 000
+  </p>
+</footer>
+
+<button id="backToTop" class="back-to-top" type="button" aria-label="Quay về đầu trang">^</button>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -62,10 +62,17 @@ function render() {
   document.getElementById('count').textContent = total + ' lá';
 }
 
-function filter(suit, btn) {
+function filter(suit) {
   activeFilter = suit;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.tab').forEach((t) => {
+    t.classList.toggle('active', t.dataset.suit === suit);
+  });
+
+  const mobilePanel = document.getElementById('mobilePanel');
+  if (mobilePanel) {
+    mobilePanel.classList.remove('open');
+  }
+
   render();
 }
 
@@ -74,18 +81,84 @@ function search(val) {
   render();
 }
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() {
+  const searchInput = document.getElementById('search');
+  activeFilter = 'all';
+  searchVal = '';
+
+  if (searchInput) {
+    searchInput.value = '';
+  }
+
+  document.querySelectorAll('.tab').forEach((t) => {
+    t.classList.toggle('active', t.dataset.suit === 'all');
+  });
+
+  const mobilePanel = document.getElementById('mobilePanel');
+  mobilePanel?.classList.remove('open');
+
+  render();
+  scrollToTop();
+}
+
+function syncLanguageSelectors(changedSelect) {
+  const value = changedSelect.value;
+  document.querySelectorAll('.lang-select-input').forEach((select) => {
+    select.value = value;
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  const siteHeader = document.querySelector('.site-header');
   const tabs = document.querySelectorAll('.tab');
   const searchInput = document.getElementById('search');
+  const menuToggle = document.getElementById('menuToggle');
+  const mobilePanel = document.getElementById('mobilePanel');
+  const brandHome = document.getElementById('brandHome');
+  const backToTop = document.getElementById('backToTop');
+  const languageSelects = document.querySelectorAll('.lang-select-input');
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      filter(tab.dataset.suit, tab);
+      filter(tab.dataset.suit);
     });
   });
 
-  searchInput.addEventListener('input', (event) => {
+  searchInput?.addEventListener('input', (event) => {
     search(event.target.value);
+  });
+
+  menuToggle?.addEventListener('click', () => {
+    mobilePanel?.classList.toggle('open');
+    document.querySelector('.site-header')?.classList.remove('header-hidden');
+  });
+
+  languageSelects.forEach((select) => {
+    select.addEventListener('change', () => {
+      syncLanguageSelectors(select);
+    });
+  });
+
+  brandHome?.addEventListener('click', goHome);
+  backToTop?.addEventListener('click', scrollToTop);
+
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    if (siteHeader) {
+      const scrollingDown = window.scrollY > lastScrollY;
+      const menuOpen = mobilePanel?.classList.contains('open');
+      const shouldHide = scrollingDown && window.scrollY > 120 && !menuOpen;
+      siteHeader.classList.toggle('header-hidden', shouldHide);
+      lastScrollY = window.scrollY;
+    }
+
+    if (!backToTop) return;
+    const shouldShow = window.scrollY > 250;
+    backToTop.classList.toggle('visible', shouldShow);
   });
 
   render();
