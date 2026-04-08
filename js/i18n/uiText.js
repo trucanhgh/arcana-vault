@@ -1,6 +1,6 @@
 export const UI_TEXT = {
   vi: {
-    documentTitle: '78 Lá Tarot',
+    documentTitle: '💫 Fortune Cookie',
     heroTitle: '78 Tarot Cards',
     heroSubtitle: 'Ý nghĩa & keywords dễ nhớ',
     searchPlaceholder: 'Tìm lá tarot...',
@@ -40,7 +40,7 @@ export const UI_TEXT = {
     footerContact: 'Contact: babychewimi@gmail.com · threads: @babychewimi',
   },
   en: {
-    documentTitle: '78 Tarot Cards',
+    documentTitle: '💫 Fortune Cookie',
     heroTitle: '78 Tarot Cards',
     heroSubtitle: 'Meanings & keywords',
     searchPlaceholder: 'Search tarot cards...',
