@@ -127,7 +127,7 @@ function render() {
     });
     if (!filtered.length) return;
 
-    if (activeFilter === 'all') {
+    if (ui.sectionLabels[suit]) {
       html += `<div class="section-divider">${ui.sectionLabels[suit]}</div>`;
     }
 
@@ -158,9 +158,10 @@ function render() {
           <div class="card-back">
             <div class="card-header">
               <span class="card-num" style="transform:rotate(180deg);display:inline-block">⟳</span>
-              <span class="card-name">${localizedName}${ui.reversedSuffix}</span>
+              <span class="card-name">${localizedName}</span>
+              <span class="suit-label ${suitClass[c.suit]} reversed-badge">${ui.reversedBadge}</span>
             </div>
-            <div class="card-vi" style="padding-left:2.4rem"><span class="rev-badge">${ui.reversedBadge}</span></div>
+            <div class="card-vi">${localizedLabel}</div>
             <div class="card-rev-meaning">${localizedRev}</div>
             <div class="keywords">${revkwHtml}</div>
             <span class="flip-hint">${ui.flipHintBack}</span>

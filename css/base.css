@@ -68,10 +68,10 @@ body::before {
 .brand-home {
 	display: flex;
 	align-items: center;
-	gap: 0.65rem;
+	gap: 0rem;
 	background: transparent;
 	border: none;
-	padding: 0.05rem 0.1rem;
+	padding: 0.05rem 0rem;
 	color: var(--text);
 	cursor: pointer;
 	min-width: 150px;
@@ -82,7 +82,7 @@ body::before {
 }
 
 .brand-icon {
-	font-size: 1.5rem;
+	font-size: 3rem;
 	color: var(--gold-light);
 }
 
@@ -195,8 +195,8 @@ body::before {
 	content: '✦ ✦ ✦';
 	display: block;
 	color: var(--gold);
-	font-size: 1rem;
-	letter-spacing: 1rem;
+	font-size: 2rem;
+	letter-spacing: 0.5rem;
 	margin-top: 0.8rem;
 	opacity: 0.7;
 }
@@ -371,6 +371,11 @@ h1 {
 	border-radius: 1px;
 	margin-left: auto;
 	flex-shrink: 0;
+	white-space: nowrap;
+}
+
+.reversed-badge {
+	white-space: nowrap;
 }
 
 .suit-major { background: rgba(123,79,166,0.3); color: #c4a0e8; border: 1px solid rgba(123,79,166,0.4); }
@@ -382,9 +387,9 @@ h1 {
 .section-divider {
 	grid-column: 1 / -1;
 	text-align: center;
-	padding: 1.5rem 0 0.8rem;
-	font-family: 'Cinzel Decorative', serif;
-	font-size: 0.8rem;
+	padding: 2rem 0 2rem;
+	font-family: 'EB Garamond', serif;
+	font-size: 1rem;
 	letter-spacing: 0.2em;
 	color: var(--gold);
 	opacity: 0.8;
@@ -419,7 +424,7 @@ h1 {
 	background: transparent !important;
 	border: none !important;
 	padding: 0 !important;
-	min-height: 300px;
+	min-height: 320px;
 }
 .card:hover { transform: none !important; }
 .card:hover::before { opacity: 0 !important; }
@@ -573,7 +578,11 @@ h1 {
 }
 
 @media(max-width: 500px) {
-	.grid { padding: 0 0.5rem 3rem; gap: 1px; }
+	.grid {
+		grid-template-columns: 1fr;
+		padding: 0 1.2rem 3rem;
+		gap: 1px;
+	}
 	.card { padding: 0.9rem 1rem; }
 }
 
