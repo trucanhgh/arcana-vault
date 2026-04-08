@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💫 Fortune Cookie</title>
+<title>Chewimi Tarot</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%AB%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 </head>
@@ -14,7 +15,7 @@
     <button class="brand-home" id="brandHome" type="button" aria-label="Về đầu trang">
       <span class="brand-icon">🌕</span>
       <span class="brand-copy">
-        <span class="brand-title">Fortune Cookie</span>
+        <span class="brand-title">The Vault of Arcana</span>
         <span class="brand-subtitle">by babychewimi</span>
       </span>
     </button>
@@ -36,14 +37,6 @@
   </div>
 
   <div id="mobilePanel" class="mobile-panel">
-    <div class="tabs mobile-tabs">
-      <button class="tab active" data-suit="all">Tất cả (78)</button>
-      <button class="tab" data-suit="major">✦ Major Arcana (22)</button>
-      <button class="tab" data-suit="wands">✦ Wands (14)</button>
-      <button class="tab" data-suit="cups">✦ Cups (14)</button>
-      <button class="tab" data-suit="swords">✦ Swords (14)</button>
-      <button class="tab" data-suit="pents">✦ Pentacles (14)</button>
-    </div>
     <label class="lang-wrap mobile-lang" for="langMobile">
       <span>Ngôn ngữ</span>
       <select id="langMobile" class="lang-select-input">
@@ -58,6 +51,15 @@
   <h1>Tarot Cheatsheet</h1>
   <p class="subtitle"></p>
 </section>
+
+<div class="tabs mobile-tabs mobile-tabs-bar">
+  <button class="tab active" data-suit="all">Tất cả (78)</button>
+  <button class="tab" data-suit="major">✦ Major Arcana (22)</button>
+  <button class="tab" data-suit="wands">✦ Wands (14)</button>
+  <button class="tab" data-suit="cups">✦ Cups (14)</button>
+  <button class="tab" data-suit="swords">✦ Swords (14)</button>
+  <button class="tab" data-suit="pents">✦ Pentacles (14)</button>
+</div>
 
 <div class="tabs desktop-tabs">
   <button class="tab active" data-suit="all">Tất cả (78)</button>

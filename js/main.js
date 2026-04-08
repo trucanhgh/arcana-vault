@@ -69,6 +69,8 @@ const minorRankMap = {
   Q: 13,
   K: 14,
 };
+const BASE_CARD_MIN_HEIGHT = 340;
+let cardHeightRafId = 0;
 
 let activeFilter = 'all';
 let searchVal = '';
@@ -139,9 +141,10 @@ function updateTabLabels() {
     const baseLabel = ui.tabs[suit];
     if (!baseLabel) return;
 
+    const isMobileTab = tab.closest('.mobile-tabs');
     const count = suit === 'all' ? cards.length : (suitCount[suit] || 0);
     const prefix = suit === 'all' ? '' : '✦ ';
-    tab.textContent = `${prefix}${baseLabel} (${count})`;
+    tab.textContent = isMobileTab ? `${prefix}${baseLabel}` : `${prefix}${baseLabel} (${count})`;
   });
 }
 
@@ -186,6 +189,44 @@ function setLanguage(lang, shouldRender = true) {
   if (shouldRender) {
     render();
   }
+}
+
+function syncCardHeights() {
+  const cardsInGrid = Array.from(document.querySelectorAll('#grid .card'));
+  if (!cardsInGrid.length) return;
+
+  let unifiedHeight = BASE_CARD_MIN_HEIGHT;
+
+  cardsInGrid.forEach((card) => {
+    const front = card.querySelector('.card-front');
+    const back = card.querySelector('.card-back');
+
+    if (!(front instanceof HTMLElement) || !(back instanceof HTMLElement)) {
+      return;
+    }
+
+    unifiedHeight = Math.max(unifiedHeight, front.scrollHeight, back.scrollHeight);
+  });
+
+  cardsInGrid.forEach((card) => {
+    const inner = card.querySelector('.card-inner');
+    card.style.height = `${unifiedHeight}px`;
+    if (inner instanceof HTMLElement) {
+      inner.style.height = `${unifiedHeight}px`;
+      inner.style.minHeight = `${unifiedHeight}px`;
+    }
+  });
+}
+
+function scheduleCardHeightSync() {
+  if (cardHeightRafId) {
+    cancelAnimationFrame(cardHeightRafId);
+  }
+
+  cardHeightRafId = requestAnimationFrame(() => {
+    cardHeightRafId = 0;
+    syncCardHeights();
+  });
 }
 
 function render() {
@@ -274,6 +315,12 @@ function render() {
 
   grid.innerHTML = html || `<div class="empty-state">${ui.emptyState}</div>`;
   document.getElementById('count').textContent = ui.countText(total);
+  scheduleCardHeightSync();
+
+  grid.querySelectorAll('.card-thumb').forEach((image) => {
+    if (image.complete) return;
+    image.addEventListener('load', scheduleCardHeightSync, { once: true });
+  });
 }
 
 function filter(suit) {
@@ -408,6 +455,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const shouldShow = window.scrollY > 250;
     backToTop.classList.toggle('visible', shouldShow);
   });
+
+  window.addEventListener('resize', scheduleCardHeightSync);
+  window.addEventListener('load', scheduleCardHeightSync);
+
+  if (document.fonts && typeof document.fonts.ready?.then === 'function') {
+    document.fonts.ready.then(scheduleCardHeightSync);
+  }
 
   const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
   const initialLanguage = savedLanguage || languageSelects[0]?.value || 'vi';
