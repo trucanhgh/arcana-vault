@@ -616,7 +616,7 @@ h1 {
 		gap: 1px;
 	}
 	.card { padding: 0.9rem 3rem; }
-	.card-thumb { width: 80px; }
+	.card-thumb { width: 100px; }
 }
 
 @media (max-width: 980px) {
@@ -648,7 +648,7 @@ h1 {
     }
 
     .card { padding: 0.9rem 3rem; }
-	.card-thumb { width: 80px; }
+	.card-thumb { width: 100px; }
 }
 
 @media (max-width: 720px) {
