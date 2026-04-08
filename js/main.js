@@ -8,6 +8,67 @@ const suitCount = cards.reduce((acc, card) => {
   return acc;
 }, {});
 const LANGUAGE_STORAGE_KEY = 'tarot-lang';
+const majorImageIndexMap = {
+  '0': '00',
+  I: '01',
+  II: '02',
+  III: '03',
+  IV: '04',
+  V: '05',
+  VI: '06',
+  VII: '07',
+  VIII: '08',
+  IX: '09',
+  X: '10',
+  XI: '11',
+  XII: '12',
+  XIII: '13',
+  XIV: '14',
+  XV: '15',
+  XVI: '16',
+  XVII: '17',
+  XVIII: '18',
+  XIX: '19',
+  XX: '20',
+  XXI: '21',
+};
+const majorImageFileMap = {
+  '0': 'RWS_Tarot_00_Fool.svg',
+  I: 'RWS_Tarot_01_Magician.svg',
+  II: 'RWS_Tarot_02_High_Priestess.svg',
+  III: 'RWS_Tarot_03_Empress.svg',
+  IV: 'RWS_Tarot_04_Emperor.svg',
+  V: 'RWS_Tarot_05_Hierophant.svg',
+  VI: 'RWS_Tarot_06_Lovers.svg',
+  VII: 'RWS_Tarot_07_Chariot.svg',
+  VIII: 'RWS_Tarot_08_Strength.svg',
+  IX: 'RWS_Tarot_09_Hermit.svg',
+  X: 'RWS_Tarot_10_Wheel_of_Fortune.svg',
+  XI: 'RWS_Tarot_11_Justice.svg',
+  XII: 'RWS_Tarot_12_Hanged_Man.svg',
+  XIII: 'RWS_Tarot_13_Death.svg',
+  XIV: 'RWS_Tarot_14_Temperance.svg',
+  XV: 'RWS_Tarot_15_Devil.svg',
+  XVI: 'RWS_Tarot_16_Tower.svg',
+  XVII: 'RWS_Tarot_17_Star.svg',
+  XVIII: 'RWS_Tarot_18_Moon.svg',
+  XIX: 'RWS_Tarot_19_Sun.svg',
+  XX: 'RWS_Tarot_20_Judgement.svg',
+  XXI: 'RWS_Tarot_21_World.svg',
+};
+const minorSuitPrefix = {
+  wands: 'Wands',
+  cups: 'Cups',
+  swords: 'Swords',
+  pents: 'Pents',
+};
+const minorRankMap = {
+  A: 1,
+  P: 11,
+  Kn: 12,
+  Q: 13,
+  K: 14,
+};
 
 let activeFilter = 'all';
 let searchVal = '';
@@ -36,6 +97,35 @@ function getLocalizedCardList(card, key, lang = currentLang) {
 
 function getUi() {
   return UI_TEXT[currentLang] || UI_TEXT.vi;
+}
+
+function getCardImageSrc(card) {
+  if (typeof card?.image === 'string' && card.image.trim()) {
+    return card.image;
+  }
+
+  if (card?.suit === 'major') {
+    const majorFilename = majorImageFileMap[card.num];
+    if (majorFilename) {
+      return `./assets/images/cards/${majorFilename}`;
+    }
+
+    const majorIndex = majorImageIndexMap[card.num];
+    if (!majorIndex) return '';
+
+    const fallbackName = (card.name?.en || card.name?.vi || '').replace(/\s+/g, '_');
+    return `./assets/images/cards/RWS_Tarot_${majorIndex}_${fallbackName}.svg`;
+  }
+
+  const suitPrefix = minorSuitPrefix[card?.suit];
+  if (!suitPrefix) return '';
+
+  const rank = Number.isFinite(Number(card.num))
+    ? Number(card.num)
+    : minorRankMap[card.num];
+
+  if (!rank || rank < 1 || rank > 14) return '';
+  return `./assets/images/cards/${suitPrefix}${String(rank).padStart(2, '0')}.svg`;
 }
 
 function getNormalizedLanguage(lang) {
@@ -139,6 +229,7 @@ function render() {
       const localizedRev = getLocalizedCardText(c, 'rev');
       const localizedKw = getLocalizedCardList(c, 'kw');
       const localizedRevKw = getLocalizedCardList(c, 'revkw');
+      const cardImageSrc = getCardImageSrc(c);
 
       const kwHtml = localizedKw.map(k=>`<span class="kw">${k}</span>`).join('');
       const revkwHtml = localizedRevKw.map(k=>`<span class="kw kw-rev">${k}</span>`).join('');
@@ -151,8 +242,13 @@ function render() {
               <span class="suit-label ${suitClass[c.suit]}">${ui.suitLabel[c.suit]}</span>
             </div>
             <div class="card-vi">${localizedLabel}</div>
-            <div class="card-meaning">${localizedMeaning}</div>
-            <div class="keywords">${kwHtml}</div>
+            <div class="card-main">
+              ${cardImageSrc ? `<img class="card-thumb" src="${cardImageSrc}" alt="${localizedName}" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ''}
+              <div class="card-content">
+                <div class="card-meaning">${localizedMeaning}</div>
+                <div class="keywords">${kwHtml}</div>
+              </div>
+            </div>
             <span class="flip-hint">${ui.flipHintFront}</span>
           </div>
           <div class="card-back">
@@ -162,8 +258,13 @@ function render() {
               <span class="suit-label ${suitClass[c.suit]} reversed-badge">${ui.reversedBadge}</span>
             </div>
             <div class="card-vi">${localizedLabel}</div>
-            <div class="card-rev-meaning">${localizedRev}</div>
-            <div class="keywords">${revkwHtml}</div>
+            <div class="card-main">
+              ${cardImageSrc ? `<img class="card-thumb is-reversed" src="${cardImageSrc}" alt="${localizedName}" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ''}
+              <div class="card-content">
+                <div class="card-rev-meaning">${localizedRev}</div>
+                <div class="keywords">${revkwHtml}</div>
+              </div>
+            </div>
             <span class="flip-hint">${ui.flipHintBack}</span>
           </div>
         </div>

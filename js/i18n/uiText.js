@@ -1,7 +1,7 @@
 export const UI_TEXT = {
   vi: {
     documentTitle: '78 Lá Tarot',
-    heroTitle: '78 Lá Tarot',
+    heroTitle: '78 Tarot Cards',
     heroSubtitle: 'Ý nghĩa & keywords dễ nhớ',
     searchPlaceholder: 'Tìm lá tarot...',
     languageLabel: 'Lang',
@@ -37,7 +37,7 @@ export const UI_TEXT = {
     reversedBadge: 'REVERSED',
     emptyState: 'Không tìm thấy lá phù hợp.',
     footerIntro: '.',
-    footerContact: 'Contact: babychewimi@example.com · Instagram: @babychewimi',
+    footerContact: 'Contact: babychewimi@gmail.com · threads: @babychewimi',
   },
   en: {
     documentTitle: '78 Tarot Cards',
@@ -77,6 +77,6 @@ export const UI_TEXT = {
     reversedBadge: 'REVERSED',
     emptyState: 'No matching cards found.',
     footerIntro: '.',
-    footerContact: 'Contact: babychewimi@example.com · Instagram: @babychewimi',
+    footerContact: 'Contact: babychewimi@gmail.com · threads: @babychewimi',
   },
 };
