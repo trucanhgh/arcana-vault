@@ -15,7 +15,7 @@ A minimalist static website that provides quick, beginner-friendly meanings for 
 - Clean, aesthetic UI with smooth hover effects
 - Responsive design (works on mobile)
 - Bilingual support (English & Vietnamese)
-- 
+
 ## Tech
 - HTML
 - CSS
