@@ -7,8 +7,8 @@ A minimalist static website that provides quick, beginner-friendly meanings for 
 - https://chewimi-tarot.netlify.app/
 
 ## Preview
-![Preview](./assets/preview1.png)
-![Preview](./assets/.png)
+![Preview](./assets/preview/preview1.png)
+![Preview](./assets/preview/preview2.png)
 
 ## Features
 - Full Tarot deck overview (Major & Minor Arcana)
