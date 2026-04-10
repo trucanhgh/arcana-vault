@@ -8,7 +8,6 @@ A minimalist static website that provides quick, beginner-friendly meanings for 
 
 ## Preview
 ![Preview](./assets/preview/preview1.png)
-![Preview](./assets/preview/preview2.png)
 
 ## Features
 - Full Tarot deck overview (Major & Minor Arcana)
