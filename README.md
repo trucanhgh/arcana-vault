@@ -12,6 +12,7 @@ A minimalist static website that provides quick, beginner-friendly meanings for 
 ## Features
 - Full Tarot deck overview (Major & Minor Arcana)
 - Instant meanings — all cards on a single page
+- Click on a card to reveal its reversed meaning
 - Clean, aesthetic UI with smooth hover effects
 - Responsive design (works on mobile)
 - Bilingual support (English & Vietnamese)
