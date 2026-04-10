@@ -59,6 +59,10 @@ h1 {
 	z-index: 1;
 }
 
+.hero-search {
+	display: none;
+}
+
 .hero::after {
 	content: '✦ ✦ ✦';
 	display: block;

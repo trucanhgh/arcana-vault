@@ -101,6 +101,18 @@ function getUi() {
   return UI_TEXT[currentLang] || UI_TEXT.vi;
 }
 
+function getSearchInputs() {
+  return document.querySelectorAll('.search-input');
+}
+
+function syncSearchInputs(value) {
+  getSearchInputs().forEach((input) => {
+    if (input.value !== value) {
+      input.value = value;
+    }
+  });
+}
+
 function getCardImageSrc(card) {
   if (typeof card?.image === 'string' && card.image.trim()) {
     return card.image;
@@ -141,16 +153,20 @@ function updateTabLabels() {
     const baseLabel = ui.tabs[suit];
     if (!baseLabel) return;
 
-    const isMobileTab = tab.closest('.mobile-tabs');
     const count = suit === 'all' ? cards.length : (suitCount[suit] || 0);
-    const prefix = suit === 'all' ? '' : '✦ ';
-    tab.textContent = isMobileTab ? `${prefix}${baseLabel}` : `${prefix}${baseLabel} (${count})`;
+    const isDesktopTab = tab.closest('.desktop-tabs');
+    if (isDesktopTab) {
+      const prefix = suit === 'all' ? '' : '✦ ';
+      tab.textContent = `${prefix}${baseLabel} (${count})`;
+      return;
+    }
+
+    tab.textContent = baseLabel;
   });
 }
 
 function applyLanguageToUi() {
   const ui = getUi();
-  const searchInput = document.getElementById('search');
   const heroTitle = document.querySelector('.hero h1');
   const heroSubtitle = document.querySelector('.hero .subtitle');
   const desktopLangLabel = document.querySelector('.header-actions .lang-wrap > span');
@@ -163,7 +179,9 @@ function applyLanguageToUi() {
   document.documentElement.lang = currentLang;
   document.title = ui.documentTitle;
 
-  if (searchInput) searchInput.placeholder = ui.searchPlaceholder;
+  getSearchInputs().forEach((input) => {
+    input.placeholder = ui.searchPlaceholder;
+  });
   if (heroTitle) heroTitle.textContent = ui.heroTitle;
   if (heroSubtitle) heroSubtitle.textContent = ui.heroSubtitle;
   if (desktopLangLabel) desktopLangLabel.textContent = ui.languageLabel;
@@ -339,6 +357,7 @@ function filter(suit) {
 
 function search(val) {
   searchVal = val;
+  syncSearchInputs(val);
   render();
 }
 
@@ -347,13 +366,10 @@ function scrollToTop() {
 }
 
 function goHome() {
-  const searchInput = document.getElementById('search');
   activeFilter = 'all';
   searchVal = '';
 
-  if (searchInput) {
-    searchInput.value = '';
-  }
+  syncSearchInputs('');
 
   document.querySelectorAll('.tab').forEach((t) => {
     t.classList.toggle('active', t.dataset.suit === 'all');
@@ -373,12 +389,12 @@ function syncLanguageSelectors(changedSelect) {
 document.addEventListener('DOMContentLoaded', () => {
   const siteHeader = document.querySelector('.site-header');
   const tabs = document.querySelectorAll('.tab');
-  const searchInput = document.getElementById('search');
   const menuToggle = document.getElementById('menuToggle');
   const mobilePanel = document.getElementById('mobilePanel');
   const brandHome = document.getElementById('brandHome');
   const backToTop = document.getElementById('backToTop');
   const languageSelects = document.querySelectorAll('.lang-select-input');
+  const searchInputs = getSearchInputs();
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -386,8 +402,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  searchInput?.addEventListener('input', (event) => {
-    search(event.target.value);
+  searchInputs.forEach((input) => {
+    input.addEventListener('input', (event) => {
+      search(event.target.value);
+    });
   });
 
   let touchStartX = 0;
