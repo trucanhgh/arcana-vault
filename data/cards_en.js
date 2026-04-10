@@ -305,7 +305,7 @@ export const cards = [
         kw:['painful ending','hitting rock bottom','starting over','betrayal','total failure','rebirth'],
         meaning:'A painful but decisive and necessary ending. Hitting rock bottom — from here, the only way is up. Betrayal or total failure, but this is the starting point of rebirth.',
         revkw:['escaping suffering','recovery','overcoming crisis','new hope'],
-        rev:'Emerging from the darkest phase. Recovery after crisis, new hope nhen nhóm. Or resisting and refusing to let go of what has ended.'},
+        rev:'Emerging from the darkest phase. Recovery after crisis, new hope rekindles. Or resisting and refusing to let go of what has ended.'},
     {num:'P', name:'Page of Swords', vi:'Thị Đồng Kiếm', suit:'swords',
         kw:['curiosity','quick-witted','gathering information','vigilance','hastiness','talkative'],
         meaning:'Curious about everything, quick-witted in gathering info. Vigilant and subtle observation. Sometimes hasty in judgment or talking more than necessary.',
