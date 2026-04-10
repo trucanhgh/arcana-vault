@@ -93,7 +93,7 @@
 	font-size: 0.65rem;
 	color: var(--gold);
 	opacity: 0.7;
-	min-width: 1rem;
+	min-width: 0.9rem;
 }
 
 .card-name {
