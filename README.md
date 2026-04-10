@@ -1,0 +1,28 @@
+# 🔮 Arcana Vault
+
+A minimalist static website that provides quick, beginner-friendly meanings for Tarot cards.
+
+## Demo
+- https://trucanhgh.github.io/arcana-vault/
+- https://chewimi-tarot.netlify.app/
+
+## Preview
+![Preview](./assets/preview1.png)
+![Preview](./assets/.png)
+
+## Features
+- Full Tarot deck overview (Major & Minor Arcana)
+- Instant meanings — all cards on a single page
+- Clean, aesthetic UI with smooth hover effects
+- Responsive design (works on mobile)
+- Bilingual support (English & Vietnamese)
+- 
+## Tech
+- HTML
+- CSS
+- JavaScript
+
+## Setup
+```bash
+git clone https://github.com/trucanhgh/arcana-vault.git
+cd arcana-vault
